@@ -2,9 +2,11 @@ package stats
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"valo_tracker/config"
 )
 
@@ -34,20 +36,23 @@ type API_RESULT struct {
 	Data   []GAME `json:"data"`
 }
 
-func FetchHistoryOfPlayer() (data []PLAYER_STATS, ok bool) {
+func FetchHistoryOfPlayer() (data []PLAYER_STATS, err error) {
+	//Fetching data
 	fullUrl := fmt.Sprintf("%s/v3/matches/eu/%s/%s", config.API_ENDPOINT, config.USERNAME, config.TAG)
 	res, err := http.Get(fullUrl)
-	if err != nil {
-		log.Fatalln(err)
-		return data, false
+	if err != nil || !strings.Contains(res.Status, "200") {
+		// log.Fatalln(err)
+		return data, errors.New("error while fetching data")
 	}
 	defer res.Body.Close()
 
+	// decoding result
 	var cResp API_RESULT
 
 	if err := json.NewDecoder(res.Body).Decode(&cResp); err != nil {
 		log.Println(err)
-		log.Fatal("An error occurred, please try again mate")
+		return data, err
+		// log.Fatal("An error occurred, please try again mate")
 	}
 
 	for _, v := range cResp.Data {
@@ -58,5 +63,5 @@ func FetchHistoryOfPlayer() (data []PLAYER_STATS, ok bool) {
 		}
 	}
 
-	return data, true
+	return data, nil
 }
