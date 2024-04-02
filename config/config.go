@@ -15,11 +15,11 @@ var TAG string
 
 func Init() {
 	if TAG == "" || USERNAME == "" {
-		promptUser()
+		PromptUser()
 	}
 }
 
-func promptUser() {
+func PromptUser() {
 	fmt.Printf("You have not set your Valorant Tag, please specify it \n")
 
 	var tag string
