@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"strings"
 	"valo_tracker/config"
+
+	gcl "github.com/MaphicalYng/golang-cmd-loading"
 )
 
 type PLAYER_STATS struct {
@@ -37,9 +39,15 @@ type API_RESULT struct {
 }
 
 func FetchHistoryOfPlayer() (data []PLAYER_STATS, err error) {
+
 	//Fetching data
 	fullUrl := fmt.Sprintf("%s/v3/matches/eu/%s/%s", config.API_ENDPOINT, config.USERNAME, config.TAG)
-	res, err := http.Get(fullUrl)
+	var res *http.Response
+
+	gcl.WithLoadingMessage(func(cancelLoading func()) {
+		res, err = http.Get(fullUrl)
+		cancelLoading()
+	}, "Fetching...")
 	if err != nil || !strings.Contains(res.Status, "200") {
 		// log.Fatalln(err)
 		return data, errors.New("error while fetching data")
@@ -64,4 +72,5 @@ func FetchHistoryOfPlayer() (data []PLAYER_STATS, err error) {
 	}
 
 	return data, nil
+
 }
