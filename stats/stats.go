@@ -38,8 +38,7 @@ type API_RESULT struct {
 	Data   []GAME `json:"data"`
 }
 
-func FetchHistoryOfPlayer() (data []PLAYER_STATS, err error) {
-
+func fetchHistoryOfPlayer() (data []PLAYER_STATS, err error) {
 	//Fetching data
 	fullUrl := fmt.Sprintf("%s/v3/matches/eu/%s/%s", config.API_ENDPOINT, config.USERNAME, config.TAG)
 	var res *http.Response
@@ -48,6 +47,7 @@ func FetchHistoryOfPlayer() (data []PLAYER_STATS, err error) {
 		res, err = http.Get(fullUrl)
 		cancelLoading()
 	}, "Fetching...")
+
 	if err != nil || !strings.Contains(res.Status, "200") {
 		// log.Fatalln(err)
 		return data, errors.New("error while fetching data")
@@ -73,4 +73,26 @@ func FetchHistoryOfPlayer() (data []PLAYER_STATS, err error) {
 
 	return data, nil
 
+}
+
+func displayHistory(p []PLAYER_STATS) {
+	if len(p) == 0 {
+		fmt.Printf("There is no game to display")
+		return
+	}
+
+	for _, v := range p {
+		fmt.Printf("KDA: %d/%d/%d\n", v.Kills, v.Deaths, v.Assists)
+	}
+}
+
+func Run() {
+	res, err := fetchHistoryOfPlayer()
+	if err != nil {
+		fmt.Printf(err.Error())
+	} else {
+		fmt.Printf("#### VALORANT GAME HISTORY ####\n")
+		displayHistory(res)
+		fmt.Printf("#### END OF HISTORY ####\n")
+	}
 }
