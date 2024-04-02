@@ -76,11 +76,6 @@ func fetchHistoryOfPlayer() (data []PLAYER_STATS, err error) {
 }
 
 func displayHistory(p []PLAYER_STATS) {
-	if len(p) == 0 {
-		fmt.Printf("There is no game to display")
-		return
-	}
-
 	for _, v := range p {
 		fmt.Printf("KDA: %d/%d/%d\n", v.Kills, v.Deaths, v.Assists)
 	}
@@ -89,10 +84,14 @@ func displayHistory(p []PLAYER_STATS) {
 func Run() {
 	res, err := fetchHistoryOfPlayer()
 	if err != nil {
-		fmt.Printf(err.Error())
+		fmt.Printf("%s", err.Error())
 	} else {
-		fmt.Printf("#### VALORANT GAME HISTORY ####\n")
-		displayHistory(res)
-		fmt.Printf("#### END OF HISTORY ####\n")
+		if len(res) > 0 {
+			fmt.Printf("#### VALORANT GAME HISTORY ####\n")
+			displayHistory(res)
+			fmt.Printf("#### END OF HISTORY ####\n")
+		} else {
+			fmt.Printf("There is no game to display")
+		}
 	}
 }

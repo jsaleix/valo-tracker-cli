@@ -14,8 +14,12 @@ var USERNAME string
 var TAG string
 
 func Init() {
-	if TAG == "" || USERNAME == "" {
+	rawConf, err := ReadConfig()
+	if err != nil || rawConf.Tag == "" || rawConf.Username == "" {
 		PromptUser()
+	} else {
+		USERNAME = rawConf.Username
+		TAG = rawConf.Tag
 	}
 }
 
@@ -35,6 +39,7 @@ func PromptUser() {
 		fmt.Scanf("%s", &username)
 	}
 
+	ApplyConfig(tag, username)
 	USERNAME = username
 	TAG = tag
 }

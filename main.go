@@ -26,8 +26,10 @@ func main() {
 		fmt.Printf("Current: %s #%s\n", config.USERNAME, config.TAG)
 		return
 	}
+
 	if *resetCreds {
 		config.PromptUser()
 	}
+
 	stats.Run()
 }
