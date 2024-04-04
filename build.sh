@@ -1,6 +1,6 @@
 #!bin/sh
 
-set GO111MODULE=on
+export GO111MODULE="on"
 
 go get .
 
