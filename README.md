@@ -46,7 +46,7 @@ Or download the one corresponding to your operating system in the [releases sect
 ##  More
 Best way to use this kind of CLI is to add it to your path so you can simply use it in your terminal from anywhere as:
 
-    $: valo_tracker
+    $ valo_tracker
 
 How to do it:
 
